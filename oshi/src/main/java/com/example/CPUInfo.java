@@ -7,6 +7,7 @@ import oshi.hardware.HardwareAbstractionLayer;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.lang.management.ManagementFactory;
 
 /**
  * Validated and more robust CPU info sampler using OSHI.
@@ -64,40 +65,31 @@ public class CPUInfo{
             System.out.printf("  Core %2d: %6.2f%%\n", i, perCoreLoads[i]);
         }
 
-        System.out.println("
-Current Core Frequencies:");
+        System.out.println("Current Core Frequencies:");
         // Use FormatUtil for human friendly output
         if (freqs != null && freqs.length > 0) {
             System.out.println(Arrays.toString(freqs));
-            System.out.println("Human-friendly:");
-            for (int i = 0; i < freqs.length; i++) {
-                System.out.printf("  Core %2d: %s
-", i, oshi.util.FormatUtil.formatHertz(freqs[i]));
-            }
+System.out.println("Human-friendly:");
+for (int i = 0; i < freqs.length; i++) {
+    System.out.printf("  Core %2d: %s\n", i, oshi.util.FormatUtil.formatHertz(freqs[i]));
+}
         } else {
             System.out.println("  (no frequency info available on this platform)");
         }
 
         // Example uptime fetch via OSHI Util if available
         try {
-            long up = oshi.util.Util.getSystemUptime();
-            System.out.println("
-System Uptime (sec): " + up);
+            long up = si.getOperatingSystem().getSystemUptime();   // ✅ OSHI 6.x
+
+            System.out.println("System Uptime (sec): " + up);
         } catch (Throwable t) {
-            System.out.println("
-System Uptime: (not available in this OSHI version)");
+            System.out.println("System Uptime: (not available in this OSHI version)");
         }
 
-        System.out.println("======================");
-    }
+    System.out.println("======================");
+}
 
-if (load > 1d) {
-            return 1d; // defensive; should not normally happen
-        }
-        return load;
-    }
-
-    private static String humanReadableHz(long hz) {
+private static String humanReadableHz(long hz) {
         if (hz <= 0) return "unknown";
         double mhz = hz / 1_000_000.0;
         if (mhz >= 1000.0) {
