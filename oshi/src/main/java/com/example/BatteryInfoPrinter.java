@@ -1,10 +1,11 @@
 package com.example;
 
-import oshi.SystemInfo;
-import oshi.hardware.PowerSource;
-import oshi.hardware.HardwareAbstractionLayer;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import oshi.SystemInfo;
+import oshi.hardware.HardwareAbstractionLayer;
+import oshi.hardware.PowerSource;
 
 public class BatteryInfoPrinter {
     public static void main(String[] args) {
@@ -20,8 +21,7 @@ public class BatteryInfoPrinter {
             System.out.printf("Manufacturer: %s%n", battery.getManufacturer());
             System.out.printf("Serial Number: %s%n", battery.getSerialNumber());
             System.out.printf("Chemistry: %s%n", battery.getChemistry());
-            System.out.printf("Manufacture Date: %s%n",
-                    battery.getManufactureDate() != null ? battery.getManufactureDate().format(formatter) : "Unknown");
+            System.out.printf("Manufacture Date: %s%n", battery.getManufactureDate() != null ? battery.getManufactureDate().format(formatter) : "Unknown");
 
             System.out.printf("Design Capacity: %d %s%n", battery.getDesignCapacity(), battery.getCapacityUnits());
             System.out.printf("Max Capacity: %d %s%n", battery.getMaxCapacity(), battery.getCapacityUnits());

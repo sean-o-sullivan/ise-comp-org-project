@@ -1,13 +1,12 @@
 package com.example;
 
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
+
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.CentralProcessor.ProcessorIdentifier;
 import oshi.hardware.HardwareAbstractionLayer;
-
-import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
-import java.lang.management.ManagementFactory;
 
 /**
  * Validated and more robust CPU info sampler using OSHI.
@@ -29,7 +28,7 @@ public class CPUInfo{
         // Basic static info
         ProcessorIdentifier id = processor.getProcessorIdentifier();
         System.out.println("======================");
-        System.out.println("CPU Model: " + id.getName());
+        System.out.println(  "CPU Model: " + id.getName());
         System.out.println("Vendor: " + id.getVendor());
         System.out.println("Physical Cores: " + processor.getPhysicalProcessorCount());
         System.out.println("Logical Cores: " + processor.getLogicalProcessorCount());
