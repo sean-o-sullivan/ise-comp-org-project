@@ -97,13 +97,16 @@ public class Formatter {
 
     // Format bytes
     public static String formatBytes(long bytes) {
-        if (bytes < 0) {
-            return "Not Available";
-        }
-        int exp = (int) (Math.log(bytes) / Math.log(1024)); // log-b-(x) = log-k-(x) / log-k-(b) :: exp =
-                                                            // log-1024-(bytes)
-        String[] units = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB" };
-        return String.format("%.2f %s", bytes / Math.pow(1024, exp), units[exp]);
+    if (bytes < 0) {
+        return "N/A";
+    }
+    String[] units = {"B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"};
+    if (bytes < 1024) return bytes + " " + units[0];
+    int exp = (int) (Math.log(bytes) / Math.log(1024));
+    if (exp >= units.length) exp = units.length - 1;
+    double value = bytes / Math.pow(1024, exp);
+    return String.format("%.2f %s", value, units[exp]);
+
     }
 
     // Format Hertz, same logic as bytes
