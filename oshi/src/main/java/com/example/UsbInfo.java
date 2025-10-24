@@ -5,35 +5,56 @@ import oshi.hardware.UsbDevice;
 import java.util.List;
 
 public class UsbInfo {
-    public static void main(String[] args) {
-        SystemInfo si = new SystemInfo();
-        List<UsbDevice> usbDevices = si.getHardware().getUsbDevices(true);
 
-        for (UsbDevice device : usbDevices) {
-            printUsbDevice(device);
-            System.out.println(); // Space between devices
+    public String getUsbDetails() {
+        StringBuilder info = new StringBuilder();
+
+        try {
+            SystemInfo si = new SystemInfo();
+            List<UsbDevice> usbDevices = si.getHardware().getUsbDevices(true);
+
+            info.append("USB DEVICE INFORMATION\n");
+            info.append("======================\n");
+
+            if (usbDevices == null || usbDevices.isEmpty()) {
+                info.append("No USB devices detected.\n");
+                return info.toString();
+            }
+
+            for (UsbDevice device : usbDevices) {
+                appendUsbDeviceInfo(info, device, 0);
+                info.append("\n");
+            }
+
+            info.append("======================\n");
+
+        } catch (Exception e) {
+            info.append("Error fetching USB information: ").append(e.getMessage()).append("\n");
         }
+
+        return info.toString();
     }
 
-    private static void printUsbDevice(UsbDevice device) {
-        System.out.println("Name: " + device.getName());
-        System.out.println("Vendor: " + device.getVendor());
-        System.out.println("Product ID: " + device.getProductId());
-        System.out.println("Serial Number: " + device.getSerialNumber());
-        System.out.println("Unique Device ID: " + device.getUniqueDeviceId());
+    /**
+     * Recursively appends details of a USB device and its connected children.
+     */
+    private void appendUsbDeviceInfo(StringBuilder info, UsbDevice device, int indentLevel) {
+        String indent = "  ".repeat(indentLevel);
+
+        info.append(indent).append("Name: ").append(device.getName()).append("\n");
+        info.append(indent).append("Vendor: ").append(device.getVendor()).append("\n");
+        info.append(indent).append("Product ID: ").append(device.getProductId()).append("\n");
+        info.append(indent).append("Serial Number: ").append(device.getSerialNumber()).append("\n");
+        info.append(indent).append("Unique Device ID: ").append(device.getUniqueDeviceId()).append("\n");
 
         List<UsbDevice> children = device.getConnectedDevices();
-        System.out.println("Number of Connected Devices: " + children.size());
+        info.append(indent).append("Number of Connected Devices: ").append(children.size()).append("\n");
 
         if (!children.isEmpty()) {
-            System.out.println("Connected Devices:");
+            info.append(indent).append("Connected Devices:\n");
             for (UsbDevice child : children) {
-                System.out.println("  - Name: " + child.getName());
-                System.out.println("    Vendor: " + child.getVendor());
-                System.out.println("    Product ID: " + child.getProductId());
-                System.out.println("    Serial Number: " + child.getSerialNumber());
-                System.out.println("    Unique Device ID: " + child.getUniqueDeviceId());
-                System.out.println();
+                appendUsbDeviceInfo(info, child, indentLevel + 1);
+                info.append("\n");
             }
         }
     }

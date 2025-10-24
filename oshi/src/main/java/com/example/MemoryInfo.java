@@ -55,10 +55,4 @@ public class MemoryInfo {
 
         return info.toString();
     }
-
-    // Optional main method for testing
-    public static void main(String[] args) {
-        MemoryInfo memoryInfo = new MemoryInfo();
-        System.out.println(memoryInfo.getMemoryDetails());
-    }
 }
