@@ -3,6 +3,20 @@
   "configurations": [
     {
       "type": "java",
+      "name": "OSInfo",
+      "request": "launch",
+      "mainClass": "com.example.OSInfo",
+      "projectName": "oshi-network-info"
+    },
+    {
+      "type": "java",
+      "name": "SensorsInfo",
+      "request": "launch",
+      "mainClass": "com.example.SensorsInfo",
+      "projectName": "oshi-network-info"
+    },
+    {
+      "type": "java",
       "name": "CPUInfo",
       "request": "launch",
       "mainClass": "com.example.CPUInfo",
