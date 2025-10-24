@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "CPUInfo",
+      "request": "launch",
+      "mainClass": "com.example.CPUInfo",
+      "projectName": "oshi-network-info"
+    },
+    {
+      "type": "java",
       "name": "Run JavaFX App",
       "request": "launch",
       "mainClass": "com.example.mainApp",
