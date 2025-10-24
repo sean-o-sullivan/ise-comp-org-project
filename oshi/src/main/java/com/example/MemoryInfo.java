@@ -4,37 +4,61 @@ import oshi.SystemInfo;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.PhysicalMemory;
 import oshi.hardware.VirtualMemory;
-
 import java.util.List;
 
 public class MemoryInfo {
 
-    public static void main(String[] args) {
-        SystemInfo si = new SystemInfo();
-        GlobalMemory memory = si.getHardware().getMemory();
+    public String getMemoryDetails() {
+        StringBuilder info = new StringBuilder();
 
-        // Total and available physical memory
-        System.out.println(String.format("Total Physical Memory: %d bytes", memory.getTotal()));
-        System.out.println(String.format("Available Physical Memory: %d bytes", memory.getAvailable()));
+        try {
+            SystemInfo si = new SystemInfo();
+            GlobalMemory memory = si.getHardware().getMemory();
 
-        // Virtual memory (swap) info
-        VirtualMemory virtualMem = memory.getVirtualMemory();
-        System.out.println(String.format("Total Swap Memory: %d bytes", virtualMem.getSwapTotal()));
-        System.out.println(String.format("Used Swap Memory: %d bytes", virtualMem.getSwapUsed()));
-        System.out.println(String.format("Pages Swapped In: %d", virtualMem.getSwapPagesIn()));
-        System.out.println(String.format("Pages Swapped Out: %d", virtualMem.getSwapPagesOut()));
+            info.append("MEMORY INFORMATION\n");
+            info.append("======================\n");
 
-        // Detailed information about each physical DIMM module
-        List<PhysicalMemory> dimms = memory.getPhysicalMemory();
-        for (int i = 0; i < dimms.size(); i++) {
-            PhysicalMemory dimm = dimms.get(i);
-            System.out.println(String.format("=== DIMM %d ===", i));
-            System.out.println(String.format("Capacity: %d bytes", dimm.getCapacity()));
-            System.out.println(String.format("Clock Speed: %d Hz", dimm.getClockSpeed()));
-            System.out.println(String.format("Manufacturer: %s", dimm.getManufacturer()));
-            System.out.println(String.format("Serial Number: %s", dimm.getSerialNumber()));
-            System.out.println(String.format("Bank Label: %s", dimm.getBankLabel()));
-            System.out.println(String.format("Memory Type: %s", dimm.getMemoryType()));
+            // Total and available physical memory
+            info.append(String.format("Total Physical Memory: %d bytes%n", memory.getTotal()));
+            info.append(String.format("Available Physical Memory: %d bytes%n", memory.getAvailable()));
+
+            // Virtual memory (swap) info
+            VirtualMemory virtualMem = memory.getVirtualMemory();
+            info.append(String.format("Total Swap Memory: %d bytes%n", virtualMem.getSwapTotal()));
+            info.append(String.format("Used Swap Memory: %d bytes%n", virtualMem.getSwapUsed()));
+            info.append(String.format("Pages Swapped In: %d%n", virtualMem.getSwapPagesIn()));
+            info.append(String.format("Pages Swapped Out: %d%n", virtualMem.getSwapPagesOut()));
+
+            // Detailed information about each physical DIMM module
+            List<PhysicalMemory> dimms = memory.getPhysicalMemory();
+            if (dimms != null && !dimms.isEmpty()) {
+                info.append("\nPhysical Memory Modules (DIMMs):\n");
+                for (int i = 0; i < dimms.size(); i++) {
+                    PhysicalMemory dimm = dimms.get(i);
+                    info.append(String.format("=== DIMM %d ===%n", i));
+                    info.append(String.format("Capacity: %d bytes%n", dimm.getCapacity()));
+                    info.append(String.format("Clock Speed: %d Hz%n", dimm.getClockSpeed()));
+                    info.append(String.format("Manufacturer: %s%n", dimm.getManufacturer()));
+                    info.append(String.format("Serial Number: %s%n", dimm.getSerialNumber()));
+                    info.append(String.format("Bank Label: %s%n", dimm.getBankLabel()));
+                    info.append(String.format("Memory Type: %s%n", dimm.getMemoryType()));
+                }
+            } else {
+                info.append("No physical memory module information available.\n");
+            }
+
+            info.append("======================\n");
+
+        } catch (Exception e) {
+            info.append("Error fetching memory information: ").append(e.getMessage()).append("\n");
         }
+
+        return info.toString();
+    }
+
+    // Optional main method for testing
+    public static void main(String[] args) {
+        MemoryInfo memoryInfo = new MemoryInfo();
+        System.out.println(memoryInfo.getMemoryDetails());
     }
 }
