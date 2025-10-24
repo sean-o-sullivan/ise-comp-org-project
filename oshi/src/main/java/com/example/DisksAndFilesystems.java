@@ -46,13 +46,17 @@ public class DisksAndFilesystems {
 
 
 
+
+
+
     // Print all disk and filesystem info
     public String getInfo() {
         StringBuilder info = new StringBuilder();
 
         try {
-            info.append("Disks & Filesystems");
-            info.append("-------------------");
+            info.append("==============================\n");
+            info.append("Disks & Filesystems\n");
+            info.append("==============================\n");
 
             List<HWDiskStore> disks = getDisks();
             if (disks.isEmpty()) {
@@ -92,41 +96,43 @@ public class DisksAndFilesystems {
                     } else {
                         info.append("Partitions: ").append(parts.size()).append("\n");
                         for (HWPartition part : parts) {
-                            info.append("  Identification: ").append(Formatter.nullToDefault(part.getIdentification(), "Unknown")).append("\n");
-                            info.append("  Name: ").append(Formatter.nullToDefault(part.getName(), "Unknown")).append("\n");
-                            info.append("  Type: ").append(Formatter.nullToDefault(part.getType(), "Unknown")).append("\n");
-                            info.append("  UUID: ").append(Formatter.nullToDefault(part.getUuid(), "Unknown")).append("\n");
-                            info.append("  Mount Point: ").append(Formatter.nullToDefault(part.getMountPoint(), "")).append("\n");
-                            info.append("  Size: ").append(Formatter.formatBytes(Math.max(0, part.getSize()))).append("\n");
-                            info.append("  Major: ").append(part.getMajor()).append("\n");
-                            info.append("  Minor: ").append(part.getMinor()).append("\n");
+                            info.append("    Identification: ").append(Formatter.nullToDefault(part.getIdentification(), "Unknown")).append("\n");
+                            info.append("    Name: ").append(Formatter.nullToDefault(part.getName(), "Unknown")).append("\n");
+                            info.append("    Type: ").append(Formatter.nullToDefault(part.getType(), "Unknown")).append("\n");
+                            info.append("    UUID: ").append(Formatter.nullToDefault(part.getUuid(), "Unknown")).append("\n");
+                            info.append("    Mount Point: ").append(Formatter.nullToDefault(part.getMountPoint(), "")).append("\n");
+                            info.append("    Size: ").append(Formatter.formatBytes(Math.max(0, part.getSize()))).append("\n");
+                            info.append("    Major: ").append(part.getMajor()).append("\n");
+                            info.append("    Minor: ").append(part.getMinor()).append("\n");
                         }
                     }
                 }
             }
         
-        info.append("\nFile Stores\n");
-        System.out.println("-----------\n");
+        info.append("\n==============================\n");
+        info.append("File Stores\n");
+        info.append("==============================\n");
+
         List<OSFileStore> stores = getFileStores();
         if (stores.isEmpty()) {
             info.append("No file stores found\n");
         } else {
             info.append("File store count: ").append(stores.size()).append("\n");
             for (OSFileStore store : stores) {
-                info.append("Name: ").append(Formatter.nullToDefault(store.getName(), "Unknown")).append("\n");
-                info.append("Volume: ").append(Formatter.nullToDefault(store.getVolume(), "Unknown")).append("\n");
-                info.append("Label: ").append(Formatter.nullToDefault(store.getLabel(), "Unknown")).append("\n");
-                info.append("Description: ").append(Formatter.nullToDefault(store.getDescription(), "Unknown")).append("\n");
-                info.append("Type: ").append(Formatter.nullToDefault(store.getType(), "Unknown")).append("\n");
-                info.append("Mount: ").append(Formatter.nullToDefault(store.getMount(), "Unknown")).append("\n");
+                info.append("    Name: ").append(Formatter.nullToDefault(store.getName(), "Unknown")).append("\n");
+                info.append("    Volume: ").append(Formatter.nullToDefault(store.getVolume(), "Unknown")).append("\n");
+                info.append("    Label: ").append(Formatter.nullToDefault(store.getLabel(), "Unknown")).append("\n");
+                info.append("    Description: ").append(Formatter.nullToDefault(store.getDescription(), "Unknown")).append("\n");
+                info.append("    Type: ").append(Formatter.nullToDefault(store.getType(), "Unknown")).append("\n");
+                info.append("    Mount: ").append(Formatter.nullToDefault(store.getMount(), "Unknown")).append("\n");
 
                 long totalSpace = store.getTotalSpace() < 0 ? 0 : store.getTotalSpace();
                     long usableSpace = store.getUsableSpace() < 0 ? 0 : store.getUsableSpace();
                     long freeSpace = store.getFreeSpace() < 0 ? 0 : store.getFreeSpace();
 
-                    info.append("Total Space: ").append(Formatter.formatBytes(totalSpace)).append("\n");
-                    info.append("Usable Space: ").append(Formatter.formatBytes(usableSpace)).append("\n");
-                    info.append("Free Space: ").append(Formatter.formatBytes(freeSpace)).append("\n");
+                    info.append("    Total Space: ").append(Formatter.formatBytes(totalSpace)).append("\n");
+                    info.append("    Usable Space: ").append(Formatter.formatBytes(usableSpace)).append("\n");
+                    info.append("    Free Space: ").append(Formatter.formatBytes(freeSpace)).append("\n");
             }
         }
         
