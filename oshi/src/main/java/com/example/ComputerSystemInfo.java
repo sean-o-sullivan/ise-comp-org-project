@@ -9,35 +9,72 @@ import oshi.hardware.Firmware;
  * Minimal OSHI demo printing computer system, baseboard, firmware, and chassis info.
  */
 public class ComputerSystemInfo {
-    public static void main(String[] args) {
+    public String getComputerSystemDetails() {
+        StringBuilder info = new StringBuilder();
+
+        try {
         SystemInfo si = new SystemInfo();
         ComputerSystem cs = si.getHardware().getComputerSystem();
 
-        System.out.println("======================");
-        System.out.println("Computer System");
-        System.out.println("Manufacturer: " + cs.getManufacturer());
-        System.out.println("Model:        " + cs.getModel());
-        System.out.println("Serial:       " + cs.getSerialNumber());
+        info.append("==============================\n");
+        info.append("Computer System Information\n");
+        info.append("==============================\n\n");
+
+        if (cs == null) {
+            info.append("Error: Unable to fetch computer system details.\n");
+            return info.toString();
+        }
+        //computer system
+        info.append("COMPUTER SYSTEM\n");
+        info.append("Manufacturer: ").append(cs.getManufacturer()).append("\n");
+        info.append("Model:        ").append(cs.getModel()).append("\n");
+        info.append("Serial:       ").append(cs.getSerialNumber()).append("\n");
+        
 
         Baseboard bb = cs.getBaseboard();
-        System.out.println("\nBaseboard");
-        System.out.println("Manufacturer: " + bb.getManufacturer());
-        System.out.println("Model:        " + bb.getModel());
-        System.out.println("Version:      " + bb.getVersion());
-        System.out.println("Serial:       " + bb.getSerialNumber());
+        info.append("==============================\n");
+        info.append("Baseboard\n");
+        info.append("==============================\n");
+        if (bb != null) {
+            info.append("Manufacturer: ").append(bb.getManufacturer()).append("\n");
+            info.append("Model:        ").append(bb.getModel()).append("/n");
+            info.append("Version:      ").append(bb.getVersion()).append("\n");
+            info.append("Serial:       ").append(bb.getSerialNumber()).append("\n");
+        } else {
+            info.append("The Baseboard info not available.\n\n");
+        }
 
         Firmware fw = cs.getFirmware();
-        System.out.println("\nFirmware");
-        System.out.println("Manufacturer:  " + fw.getManufacturer());
-        System.out.println("Name:          " + fw.getName());
-        System.out.println("Description:   " + fw.getDescription());
-        System.out.println("Release Date:  " + fw.getReleaseDate());
-        System.out.println("Version:       " + fw.getVersion());
+        info.append("==============================\n");
+        info.append("Firmware\n");
+        info.append("==============================\n");
+        if (fw != null) {
+            info.append("Manufacturer:  ").append(fw.getManufacturer()).append("\n");
+            info.append("Name:          ").append(fw.getName()).append("\n");
+            info.append("Description:   ").append(fw.getDescription()).append("\n");
+            info.append("Release Date:  ").append(fw.getReleaseDate()).append("\n");
+            info.append("Version:       ").append( fw.getVersion()).append("\n");
 
-        System.out.println("\nChassis (approximated from system info)");
-        System.out.println("Manufacturer: " + cs.getManufacturer());
-        System.out.println("Model:        " + cs.getModel());
-        System.out.println("Serial:       " + cs.getSerialNumber());
-        System.out.println("======================");
+        } else {
+            info.append("The Firmware info not available.\n\n");
+        }
+
+        info.append("==============================\n");
+        info.append("Chassis (approximated from system info\n)");
+        info.append("==============================\n");
+        info.append("Manufacturer: ").append(cs.getManufacturer()).append("\n");
+        info.append("Model:        ").append(cs.getModel()).append("\n");
+        info.append("Serial:       ").append(cs.getSerialNumber()).append("\n");
+        info.append("==============================\n");
+    } catch (Exception e) {
+        info.append("Error getting computer system info: ").append(e.getMessage()).append("\n");
+    }
+    return info.toString();
+    }
+
+    //test
+    public static void main(String[] args) {
+        ComputerSystemInfo csi = new ComputerSystemInfo();
+        System.out.println(csi.getComputerSystemDetails());
     }
 }
