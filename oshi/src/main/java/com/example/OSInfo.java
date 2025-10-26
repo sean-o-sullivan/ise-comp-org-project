@@ -2,10 +2,9 @@ package com.example;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import com.example.helpers.Formatter;
-import com.example.helpers.Table;
 
 import oshi.SystemInfo;
 import oshi.software.os.FileSystem;
@@ -220,137 +219,123 @@ public class OSInfo {
     }
 
     // Print all OS info
-    public void printOsInfo() {
-        System.out.println("Operating System");
-        System.out.println("----------------");
-        System.out.println("Family: " + getFamily() + ".");
-        System.out.println("Manufacturer: " + getManufacturer() + ".");
+    public String buildOsInfo() {
+        StringBuilder info = new StringBuilder();
 
-        System.out.println("Version: " + getVersion() + ".");
-        System.out.println("Build number: " + getBuildNumber() + ".");
-        System.out.println("Code name: " + getCodeName() + ".");
-        System.out.println();
+        info.append("Operating System\n");
+        info.append("----------------\n");
 
-        System.out.println("Architecture & Time");
-        System.out.println("-------------------");
-        System.out.println("Bitness: " + getBitness() + ".");
-        String bootHuman = Formatter.formatEpochSeconds(getSystemBootTimeEpochSeconds());
-        System.out.println("System boot time: " + bootHuman + ".");
+        try{
+            info.append("Family: ").append(getFamily()).append(".\n");
+            } catch (Throwable t) {
+            }
 
-        String uptimeHuman = Formatter.formatDuration(getSystemUptimeSeconds());
-        String uptimeRaw = getSystemUptimeSeconds();
-        System.out.println("System uptime: " + uptimeHuman + " (" + uptimeRaw + " seconds).");
-        System.out.println();
+        try { 
+            info.append("Manufacturer: ").append(getManufacturer()).append(".\n"); 
+            } catch(Throwable t) {
+            }
+        
+        try {
+             info.append("Version: ").append(getVersion()).append(".\n"); 
+            } catch(Throwable t) {
+            }
 
-        System.out.println("Workload");
-        System.out.println("--------");
-        System.out.println("Process count: " + getProcessCount() + ".");
-        System.out.println("Thread count: " + getThreadCount() + ".");
-        System.out.println();
+        try { 
+            info.append("Build number: ").append(getBuildNumber()).append(".\n"); 
+            } catch(Throwable t) {
+            }
+
+        try { 
+            info.append("Code name: ").append(getCodeName()).append(".\n\n"); 
+            } catch(Throwable t) {
+            }
+
+        
+        
+        info.append("Architecture & Time\n");
+        info.append("-------------------\n");
+
+        try {
+            info.append("Bitness: ").append(getBitness()).append(".\n");
+            } catch (Throwable e) {
+            }
+
+        try { info.append("System boot time: ").append(Formatter.formatEpochSeconds(getSystemBootTimeEpochSeconds())).append(".\n"); 
+            } catch(Throwable t) {
+            }
+        
+        try { 
+            info.append("System uptime: ").append(Formatter.formatDuration(getSystemUptimeSeconds())).append(" (").append(getSystemUptimeSeconds()).append(" seconds).\n"); 
+            } catch(Throwable t) {
+            }
+        info.append("\n");
+
+        info.append("Workload\n");
+        info.append("--------\n");
+
+        try { 
+            info.append("Process count: ").append(getProcessCount()).append(".\n"); 
+            } catch(Throwable t) {
+            }
+
+        try { 
+            info.append("Thread count: ").append(getThreadCount()).append(".\n"); 
+            } catch(Throwable t) {
+            }
+        info.append("\n");
 
         List<OSSession> sessions = getSessionsSafe();
-        System.out.println("Logged-in Sessions");
-        System.out.println("------------------");
+        info.append("Logged-in Sessions\n");
+        info.append("------------------\n");
         if (sessions.isEmpty()) {
-            System.out.println("Sessions: None detected.");
+            info.append("Sessions: None detected.");
         } else {
-            System.out.println("Session count: " + sessions.size() + ".");
+            try { info.append("Session count: ").append(sessions.size()).append(".\n"); 
+        } catch(Throwable t) {}
+
             for (OSSession s : sessions) {
-                String login = Formatter.formatEpochMilliseconds(s.getLoginTime());
-                System.out.println("User: " + Formatter.nullToDefault(s.getUserName(), "Unknown") +
-                        " @ " + Formatter.nullToDefault(s.getHost(), "local") +
-                        " (Login: " + login + ").");
-            }
-        }
-        System.out.println();
-
-        System.out.println("File System");
-        System.out.println("-----------");
-        String storeCount = getFileSystemStoreCountString();
-        System.out.println("Mounted file stores: " + storeCount + ".");
-        System.out.println();
-
-        System.out.println("Top 3 Processes (by CPU usage)");
-        System.out.println("==============================");
-        List<oshi.software.os.OSProcess> topProcesses = getProcessesSafe(3);
-        if (topProcesses.isEmpty()) {
-            System.out.println("No processes found.");
-        } else {
-            for (int i = 0; i < topProcesses.size(); i++) {
-                System.out.println("Process #" + (i + 1));
-                System.out.println("-----------");
-                com.example.OSProcess process = new com.example.OSProcess(topProcesses.get(i));
-                process.printProcessInfo();
-                if (i < topProcesses.size() - 1) {
-                    System.out.println();
+                try {
+                    String login = Formatter.formatEpochMilliseconds(s.getLoginTime());
+                    info.append("User: ").append(Formatter.nullToDefault(s.getUserName(), "Unknown")).append(" @ ").append(Formatter.nullToDefault(s.getHost(), "local")).append(" (Login: ").append(login).append(").\n");
+                } catch (Throwable t) {
                 }
+                          
             }
         }
-    }
+        info.append("\n");
 
-    // Print OS info in table
-    public void printTable() {
-        Table t = new Table();
-        t.addRow("Metric", "Value");
 
-        t.addRow("OS family", getFamily());
-        t.addRow("Manufacturer", getManufacturer());
 
-        t.addRow("Version", getVersion());
-        t.addRow("Build number", getBuildNumber());
-        t.addRow("Code name", getCodeName());
+        info.append("File System\n");
+        info.append("-----------\n");
+        
+        try {
+            info.append("Mounted file stores: ").append(getFileSystemStoreCountString()).append(".\n"); 
+            } catch(Throwable t) {
+            }
+        info.append("\n");
 
-        t.addRow("Bitness", getBitness());
-        t.addRow("Boot time", Formatter.formatEpochSeconds(getSystemBootTimeEpochSeconds()));
-        t.addRow("Uptime (human)", Formatter.formatDuration(getSystemUptimeSeconds()));
-        t.addRow("Uptime (seconds)", getSystemUptimeSeconds());
-
-        t.addRow("Process count", getProcessCount());
-        t.addRow("Thread count", getThreadCount());
-
-        List<OSSession> sessions = getSessionsSafe();
-        t.addRow("Session count", String.valueOf(sessions.size()));
-        String usersSummary = sessions.stream()
-                .map(OSSession::getUserName)
-                .filter(s -> s != null && !s.isBlank())
-                .distinct()
-                .collect(Collectors.joining(", "));
-        if (usersSummary.isBlank()) {
-            t.addRow("Users (distinct)", "—");
-        } else {
-            t.addRow("Users (distinct)", usersSummary);
-        }
-
-        String storeCount = getFileSystemStoreCountString();
-        t.addRow("Mounted file stores", storeCount);
-
-        t.print();
-
-        System.out.println();
-        System.out.println("Top 3 Processes (by CPU usage)");
-        System.out.println("==============================");
-
+        info.append("Top 3 Processes (by CPU usage)\n");
+        info.append("==============================\n");
         List<oshi.software.os.OSProcess> topProcesses = getProcessesSafe(3);
         if (topProcesses.isEmpty()) {
-            System.out.println("No processes found.");
+            info.append("No processes found.\n");
         } else {
             for (int i = 0; i < topProcesses.size(); i++) {
-                System.out.println();
-                System.out.println("Process #" + (i + 1) + ":");
-                com.example.OSProcess process = new com.example.OSProcess(topProcesses.get(i));
-                process.printProcessTable();
+                try {
+                    info.append("Process #").append(i + 1).append("\n");
+                    info.append("-----------\n");
+                    com.example.OSProcess process = new com.example.OSProcess(topProcesses.get(i));
+                    info.append(process.getProcessInfo()).append("\n\n");
+                } catch (Throwable t) {}
             }
         }
+        return info.toString();
     }
-
+    
     // Test
     public static void main(String[] args) {
         OSInfo util = new OSInfo();
-
-        util.printOsInfo();
-
-        System.out.println();
-
-        util.printTable();
+        System.out.println(util.buildOsInfo());
     }
 }
