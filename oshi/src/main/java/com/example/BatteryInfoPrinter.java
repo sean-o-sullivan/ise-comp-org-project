@@ -8,40 +8,62 @@ import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.PowerSource;
 
 public class BatteryInfoPrinter {
-    public static void main(String[] args) {
+    public String getBatteryInfo() {
+        StringBuilder info = new StringBuilder();
+
+        try {
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
         List<PowerSource> batteries = hal.getPowerSources(); // <- List instead of array
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
+        if (batteries == null || batteries.isEmpty()) {
+            info.append("No batteries found.\n");
+        } else {
+            info.append("======================\n");
+            info.append("Battery Information\n");
+            info.append("======================\n\n");
+
         for (PowerSource battery : batteries) {
-            System.out.printf("Device Name: %s%n", battery.getDeviceName());
-            System.out.printf("Power Source Name: %s%n", battery.getName());
-            System.out.printf("Manufacturer: %s%n", battery.getManufacturer());
-            System.out.printf("Serial Number: %s%n", battery.getSerialNumber());
-            System.out.printf("Chemistry: %s%n", battery.getChemistry());
-            System.out.printf("Manufacture Date: %s%n", battery.getManufactureDate() != null ? battery.getManufactureDate().format(formatter) : "Unknown");
+            info.append("Device Name: ").append(battery.getDeviceName()).append("\n");
+            info.append("Power Source Name: ").append(battery.getName()).append("\n");
+            info.append("Manufacturer: ").append(battery.getManufacturer()).append("\n");
+            info.append("Serial Number: ").append(battery.getSerialNumber()).append("\n");
+            info.append("Chemistry: ").append(battery.getChemistry()).append("\n");
+            info.append("Manufacture Date: ").append(battery.getManufactureDate() != null ? battery.getManufactureDate().format(formatter) : "Unknown").append("\n");
+            info.append("Design Capacity: ").append(battery.getDesignCapacity()).append(" ").append(battery.getCapacityUnits()).append("\n");
+            info.append("Max Capacity: ").append(battery.getMaxCapacity()).append(" ").append(battery.getCapacityUnits()).append("\n");
+            info.append("Current Capacity: ").append(battery.getCurrentCapacity()).append(" ").append(battery.getCapacityUnits()).append("\n");
+            info.append("Remaining Capacity Percent: ").append(String.format("%.2f%%", battery.getRemainingCapacityPercent() * 100)).append("\n");
 
-            System.out.printf("Design Capacity: %d %s%n", battery.getDesignCapacity(), battery.getCapacityUnits());
-            System.out.printf("Max Capacity: %d %s%n", battery.getMaxCapacity(), battery.getCapacityUnits());
-            System.out.printf("Current Capacity: %d %s%n", battery.getCurrentCapacity(), battery.getCapacityUnits());
-            System.out.printf("Remaining Capacity Percent: %.2f%%%n", battery.getRemainingCapacityPercent() * 100);
 
-            System.out.printf("Voltage (V): %.2f%n", battery.getVoltage());
-            System.out.printf("Amperage (mA): %.2f%n", battery.getAmperage());
-            System.out.printf("Power Usage Rate (mW): %.2f%n", battery.getPowerUsageRate());
-            System.out.printf("Temperature (°C): %.2f%n", battery.getTemperature());
-            System.out.printf("Estimated Time Remaining (OS): %.2f seconds%n", battery.getTimeRemainingEstimated());
-            System.out.printf("Estimated Time Remaining (Instant): %.2f seconds%n", battery.getTimeRemainingInstant());
+            info.append("Voltage (V): ").append(String.format("%.2f", battery.getVoltage())).append("\n");
+            info.append("Amperage (mA): ").append(String.format("%.2f", battery.getAmperage())).append("\n");
+            info.append("Power Usage Rate (mW): ").append(String.format("%.2f", battery.getPowerUsageRate())).append("\n");
+            info.append("Temperature (°C): ").append(String.format("%.2f", battery.getTemperature())).append("\n");
+            info.append("Estimated Time Remaining (OS): ").append(String.format("%.2f seconds", battery.getTimeRemainingEstimated())).append("\n");
+            info.append("Estimated Time Remaining (Instant): ").append(String.format("%.2f seconds", battery.getTimeRemainingInstant())).append("\n");
 
-            System.out.printf("Charging: %b%n", battery.isCharging());
-            System.out.printf("Discharging: %b%n", battery.isDischarging());
-            System.out.printf("Power On Line: %b%n", battery.isPowerOnLine());
+            info.append("Charging: ").append(battery.isCharging()).append("\n");
+            info.append("Discharging: ").append(battery.isDischarging()).append("\n");
+            info.append("Power On Line: ").append(battery.isPowerOnLine()).append("\n");
 
             battery.updateAttributes();
 
-            System.out.println("---------------------------------------------------");
+            info.append("---------------------------------------------------");
         }
+    }
+} catch (Exception e) {
+            info.append("Error fetching battery info: ").append(e.getMessage()).append("\n");
+        }
+
+        return info.toString();
+    }
+
+    //test
+    public static void main(String[] args) {
+        BatteryInfoPrinter bip = new BatteryInfoPrinter();
+        System.out.println(bip.getBatteryInfo());
     }
 }
