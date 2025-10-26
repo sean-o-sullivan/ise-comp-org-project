@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import com.example.helpers.Formatter;
-import com.example.helpers.Table;
 
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
@@ -127,7 +126,7 @@ public class SystemAndEntryPoints {
         }
     }
 
-    // Get list of graphics cards (GPU controllers)
+    // get list of graphics cards (GPU controllers)
     public List<GraphicsCard> getGraphicsCards() {
         try {
             return hal.getGraphicsCards();
@@ -146,304 +145,169 @@ public class SystemAndEntryPoints {
     }
 
     // Print all system and hardware info
-    public void printSystemInfo() {
-        System.out.println("System & Hardware Information");
-        System.out.println("----------------------------");
-        // Computer System
+    public String getSystemInfo() {
+        StringBuilder info = new StringBuilder();
+        info.append("==============================\n");
+        info.append("System & Hardware Information");
+        info.append("==============================\n\n");
+
+        try {
+        //computer system
         ComputerSystem cs = getComputerSystem();
-        System.out.println("Computer System");
-        System.out.println("---------------");
+        info.append("COMPUTER SYSTEM\n");
+        
         if (cs == null) {
-            System.out.println("Error fetching computer system info.");
+            info.append("Error fetching computer system info.\n\n");
         } else {
-            System.out.println("Manufacturer: " + Formatter.nullToDefault(cs.getManufacturer(), "Not Available"));
-            System.out.println("Model: " + Formatter.nullToDefault(cs.getModel(), "Not Available"));
-            System.out.println("Serial Number: " + Formatter.nullToDefault(cs.getSerialNumber(), "Not Available"));
+            info.append("Manufacturer: ").append(Formatter.nullToDefault(cs.getManufacturer(), "Not Available")).append("\n");
+            info.append("Model: ").append(Formatter.nullToDefault(cs.getModel(), "Not Available")).append("\n");
+            info.append("Serial Number: " ).append(Formatter.nullToDefault(cs.getSerialNumber(), "Not Available")).append("\n");
             if (cs.getBaseboard() != null) {
-                System.out.println(
-                        "Baseboard: " + Formatter.nullToDefault(cs.getBaseboard().getModel(), "Not Available"));
-                System.out.println(
-                        "Firmware: " + Formatter.nullToDefault(cs.getFirmware().getVersion(), "Not Available"));
+                info.append("Baseboard: ").append(Formatter.nullToDefault(cs.getBaseboard().getModel(), "Not Available")).append("\n");
+                info.append("Firmware: ").append(Formatter.nullToDefault(cs.getFirmware().getVersion(), "Not Available")).append("\n");
             }
+            info.append("\n");
         }
-        System.out.println();
 
         // Processor
         CentralProcessor cpu = getProcessor();
-        System.out.println("Processor");
-        System.out.println("---------");
+        info.append("PROCESSOR\n");
         if (cpu == null) {
-            System.out.println("Error fetching processor info.");
+            info.append("Error fetching processor info.\n\n");
         } else {
-            System.out.println(
-                    "Name: " + Formatter.nullToDefault(cpu.getProcessorIdentifier().getName(), "Not Available"));
-            System.out.println("Physical CPUs: " + cpu.getPhysicalProcessorCount());
-            System.out.println("Logical CPUs: " + cpu.getLogicalProcessorCount());
-            System.out.println("Max Frequency: " + Formatter.formatHertz(cpu.getMaxFreq()));
+            info.append("Name: ").append(Formatter.nullToDefault(cpu.getProcessorIdentifier().getName(), "Not Available")).append("\n");
+            info.append("Physical CPUs: ").append(cpu.getPhysicalProcessorCount()).append("\n");
+            info.append("Logical CPUs: ").append("cpu.getLogicalProcessorCount()").append("\n");
+            info.append("Max Frequency: ").append("Formatter.formatHertz(cpu.getMaxFreq())").append("\n");
         }
-        System.out.println();
 
         // Memory
         GlobalMemory mem = getMemory();
-        System.out.println("Memory");
-        System.out.println("------");
+        info.append("MEMORY\n");
         if (mem == null) {
-            System.out.println("Error fetching memory info.");
+            info.append("Error fetching memory info.\n\n");
         } else {
-            System.out.println("Total: " + Formatter.formatBytes(mem.getTotal()));
-            System.out.println("Available: " + Formatter.formatBytes(mem.getAvailable()));
+            info.append("Total: ").append(Formatter.formatBytes(mem.getTotal())).append("\n");
+            info.append("Available: ").append(Formatter.formatBytes(mem.getAvailable())).append("\n");
         }
-        System.out.println();
 
         // Disks
         List<HWDiskStore> disks = getDiskStores();
-        System.out.println("Disk Drives");
-        System.out.println("-----------");
+        info.append("DISK DRIVES");
         if (disks.isEmpty()) {
-            System.out.println("No disk drives found.");
+            info.append("No disk drives found.\n\n");
         } else {
-            System.out.println("Disk count: " + disks.size());
+            info.append("Disk count: ").append(disks.size()).append("\n");
             for (HWDiskStore d : disks) {
-                System.out.println("Model: " + Formatter.nullToDefault(d.getModel(), "Unknown") + ", Size: "
-                        + Formatter.formatBytes(d.getSize()));
+                info.append("- Model: ").append(Formatter.nullToDefault(d.getModel(), "Unknown")).append(", Size: ")
+                        .append(Formatter.formatBytes(d.getSize())).append("\n");
             }
+            info.append("\n");
         }
-        System.out.println();
 
-        // File System
-        FileSystem fs = getFileSystem();
-        System.out.println("File System");
-        System.out.println("-----------");
-        if (fs == null) {
-            System.out.println("Error fetching file system info.");
-        } else {
-            System.out.println("Mount points: " + fs.getFileStores().size());
-        }
-        System.out.println();
 
         // Network
         List<NetworkIF> nics = getNetworkIFs();
-        System.out.println("Network Interfaces");
-        System.out.println("------------------");
+        info.append("NETWORK INTERFACES\n");
         if (nics.isEmpty()) {
-            System.out.println("No network interfaces found.");
+            info.append("No network interfaces found.\n\n");
         } else {
-            System.out.println("NIC count: " + nics.size());
+            info.append("NIC count: ").append(nics.size()).append("\n");
             for (NetworkIF nic : nics) {
-                System.out.println("Name: " + Formatter.nullToDefault(nic.getName(), "Unknown") + ", MAC: "
-                        + Formatter.nullToDefault(nic.getMacaddr(), "N/A"));
+                info.append("- Name: ").append(Formatter.nullToDefault(nic.getName(), "Unknown"))
+                        .append(", MAC: ").append(Formatter.nullToDefault(nic.getMacaddr(), "N/A")).append("\n");
             }
+            info.append("\n");
         }
-        System.out.println();
-
+        
         // Power Sources
         List<PowerSource> power = getPowerSources();
-        System.out.println("Power Sources");
-        System.out.println("-------------");
+        info.append("POWER SOUCES \n");
         if (power.isEmpty()) {
-            System.out.println("No power sources found.");
+            info.append("No power sources found.\n\n");
         } else {
-            System.out.println("Power source count: " + power.size());
             for (PowerSource p : power) {
-                System.out.println("Name: " + Formatter.nullToDefault(p.getName(), "Unknown"));
+                info.append("- Name: ").append(Formatter.nullToDefault(p.getName(), "Unknown")).append("\n");
             }
+            info.append("\n");
         }
-        System.out.println();
-
+        
         // Sensors
         Sensors sensors = getSensors();
-        System.out.println("Sensors");
-        System.out.println("-------");
+        info.append("SENSORS\n");
         if (sensors == null) {
-            System.out.println("Error fetching sensors info.");
+            info.append("Error fetching sensors info.\n\n");
         } else {
-            System.out.println("CPU Temp: " + sensors.getCpuTemperature() + " °C");
-            System.out.println(
-                    "Fan Speeds: " + (sensors.getFanSpeeds().length > 0 ? sensors.getFanSpeeds().length : "N/A"));
+            info.append("CPU Temp: ").append(sensors.getCpuTemperature()).append(" °C\n");
+            info.append("Fan Speeds: ")
+                    .append(sensors.getFanSpeeds().length > 0 ? sensors.getFanSpeeds().length : "N/A").append("\n\n");
         }
-        System.out.println();
 
         // USB Devices
         List<UsbDevice> usb = getUsbDevices(true);
-        System.out.println("USB Devices");
-        System.out.println("-----------");
+        info.append("USB DEVICES\n");
         if (usb.isEmpty()) {
-            System.out.println("No USB devices found.");
+            info.append("No USB devices found.\n\n");
         } else {
-            System.out.println("USB device count: " + usb.size());
-            printUsbDeviceTree(usb, "");
+            info.append("USB device count: ").append(usb.size()).append("\n");
+            appendUsbTree(info, usb, "");
+            info.append("\n");
         }
-        System.out.println();
 
         // Graphics Cards
         List<GraphicsCard> gpus = getGraphicsCards();
-        System.out.println("Graphics Cards");
-        System.out.println("--------------");
+        info.append("GRAPHICS CARDS\n");
         if (gpus.isEmpty()) {
-            System.out.println("No graphics cards found.");
+            info.append("No graphics cards found.\n\n");
         } else {
-            System.out.println("GPU count: " + gpus.size());
+            info.append("GPU count: ").append(gpus.size()).append("\n");
             for (GraphicsCard g : gpus) {
-                System.out.println("Name: " + Formatter.nullToDefault(g.getName(), "Unknown") + ", VRAM: "
-                        + Formatter.formatBytes(g.getVRam()));
+                info.append("- Name: ").append(Formatter.nullToDefault(g.getName(), "Unknown"))
+                        .append(", VRAM: ").append(Formatter.formatBytes(g.getVRam())).append("\n");
             }
+            info.append("\n");
         }
-        System.out.println();
-
+        
         // Logical Volume Groups
         List<LogicalVolumeGroup> lvgs = getLogicalVolumeGroups();
-        System.out.println("Logical Volume Groups");
-        System.out.println("---------------------");
+        info.append("LOGICAL VOLUME GROUPS");
         if (lvgs.isEmpty()) {
-            System.out.println("No logical volume groups found.");
+            info.append("No logical volume groups found.\n\n");
         } else {
-            System.out.println("Logical Volume Group count: " + lvgs.size());
+            info.append("Logical Volume Group count: ").append(lvgs.size()).append("\n");
             for (LogicalVolumeGroup lvg : lvgs) {
-                System.out.println("Name: " + Formatter.nullToDefault(lvg.getName(), "Unknown"));
+                info.append("- Name: ").append(Formatter.nullToDefault(lvg.getName(), "Unknown")).append("\n");
             }
+            info.append("\n");
         }
-        System.out.println();
-    }
+    
+     } catch (Exception e) {
+        info.append("Error fetching system: ").append(e.getMessage()).append("\n");
+     }
+        
+     return info.toString();
+}
 
     // Print USB devices in tree format, recursive function
-    private void printUsbDeviceTree(List<UsbDevice> devices, String prefix) {
+    private void appendUsbTree(StringBuilder sb, List<UsbDevice> devices, String prefix) {
         for (int i = 0; i < devices.size(); i++) {
             UsbDevice device = devices.get(i);
             boolean isLast = (i == devices.size() - 1);
 
-            String name = Formatter.nullToDefault(device.getName(), "Unknown Device");
-            String vendor = Formatter.nullToDefault(device.getVendor(), "Unknown Vendor");
             String connector = isLast ? "└── " : "├── "; // Avoid Continous Connections By Changing For Last Item
-            System.out.println(prefix + connector + name + " (" + vendor + ")");
+            sb.append(prefix).append(connector)
+                .append(Formatter.nullToDefault(device.getName(), "Unknown Device"))
+                .append(" (").append(Formatter.nullToDefault(device.getVendor(), "Unknown Vendor")).append(")\n");
 
-            List<UsbDevice> connectedDevices = device.getConnectedDevices(); // Children Devices
-            if (!connectedDevices.isEmpty()) {
-                String newPrefix = prefix + (isLast ? "    " : "│   "); // Tabbed in prefix
-                printUsbDeviceTree(connectedDevices, newPrefix); // Recursive Call for children
+            if (!device.getConnectedDevices().isEmpty()) {
+                appendUsbTree(sb, device.getConnectedDevices(), prefix + (isLast ? "   " : "|   ")); // Recursive Call for children
             }
         }
     }
 
-    public void printTable() {
-        Table t = new Table();
-        t.addRow("METRIC", "VALUE");
-
-        // Computer System
-        t.addRow("COMPUTER SYSTEM", "");
-        ComputerSystem cs = getComputerSystem();
-        t.addRow("Manufacturer",
-                cs != null ? Formatter.nullToDefault(cs.getManufacturer(), "Not Available") : "Error Fetching");
-        t.addRow("Model", cs != null ? Formatter.nullToDefault(cs.getModel(), "Not Available") : "Error Fetching");
-        t.addRow("Serial Number",
-                cs != null ? Formatter.nullToDefault(cs.getSerialNumber(), "Not Available") : "Error Fetching");
-
-        // Processor
-        t.addRow("PROCESSOR", "");
-        CentralProcessor cpu = getProcessor();
-        t.addRow("CPU Name",
-                cpu != null ? Formatter.nullToDefault(cpu.getProcessorIdentifier().getName(), "Not Available")
-                        : "Error Fetching");
-        t.addRow("Physical CPUs", cpu != null ? String.valueOf(cpu.getPhysicalProcessorCount()) : "Error Fetching");
-        t.addRow("Logical CPUs", cpu != null ? String.valueOf(cpu.getLogicalProcessorCount()) : "Error Fetching");
-        t.addRow("Max Frequency", cpu != null ? Formatter.formatHertz(cpu.getMaxFreq()) : "Error Fetching");
-
-        // Memory
-        t.addRow("MEMORY", "");
-        GlobalMemory mem = getMemory();
-        t.addRow("RAM Total", mem != null ? Formatter.formatBytes(mem.getTotal()) : "Error Fetching");
-        t.addRow("RAM Available", mem != null ? Formatter.formatBytes(mem.getAvailable()) : "Error Fetching");
-
-        // Disk
-        t.addRow("DISK DRIVES", "");
-        List<HWDiskStore> disks = getDiskStores();
-        t.addRow("Disk count", String.valueOf(disks.size()));
-        if (!disks.isEmpty()) {
-            for (int i = 0; i < disks.size(); i++) {
-                HWDiskStore d = disks.get(i);
-                t.addRow("Disk " + (i + 1) + " Model", Formatter.nullToDefault(d.getModel(), "Unknown"));
-                t.addRow("Disk " + (i + 1) + " Size", Formatter.formatBytes(d.getSize()));
-            }
-        }
-
-        // File System
-        t.addRow("FILE SYSTEM", "");
-        FileSystem fs = getFileSystem();
-        t.addRow("Mount points", fs != null ? String.valueOf(fs.getFileStores().size()) : "Error Fetching");
-
-        // Network
-        t.addRow("NETWORK INTERFACES", "");
-        List<NetworkIF> nics = getNetworkIFs();
-        t.addRow("NIC count", String.valueOf(nics.size()));
-        if (!nics.isEmpty()) {
-            for (int i = 0; i < nics.size(); i++) {
-                NetworkIF nic = nics.get(i);
-                t.addRow("NIC " + (i + 1) + " Name", Formatter.nullToDefault(nic.getName(), "Unknown"));
-                t.addRow("NIC " + (i + 1) + " MAC", Formatter.nullToDefault(nic.getMacaddr(), "N/A"));
-            }
-        }
-
-        // Power Sources
-        t.addRow("POWER SOURCES", "");
-        List<PowerSource> power = getPowerSources();
-        t.addRow("Power source count", String.valueOf(power.size()));
-        if (!power.isEmpty()) {
-            for (int i = 0; i < power.size(); i++) {
-                PowerSource p = power.get(i);
-                t.addRow("Power " + (i + 1) + " Name", Formatter.nullToDefault(p.getName(), "Unknown"));
-            }
-        }
-
-        // Sensors
-        t.addRow("SENSORS", "");
-        Sensors sensors = getSensors();
-        t.addRow("CPU Temp", sensors != null ? sensors.getCpuTemperature() + " °C" : "Error Fetching");
-        t.addRow("Fan Speeds", sensors != null ? String.valueOf(sensors.getFanSpeeds().length) : "Error Fetching");
-
-        // USB Devices
-        t.addRow("USB DEVICES", "");
-        List<UsbDevice> usb = getUsbDevices(false);
-        t.addRow("USB device count", String.valueOf(usb.size()));
-        if (!usb.isEmpty()) {
-            for (int i = 0; i < usb.size(); i++) {
-                UsbDevice u = usb.get(i);
-                t.addRow("USB " + (i + 1) + " Name", Formatter.nullToDefault(u.getName(), "Unknown"));
-                t.addRow("USB " + (i + 1) + " Vendor", Formatter.nullToDefault(u.getVendor(), "N/A"));
-            }
-        }
-
-        // Graphics Cards
-        t.addRow("GRAPHICS CARDS", "");
-        List<GraphicsCard> gpus = getGraphicsCards();
-        t.addRow("GPU count", String.valueOf(gpus.size()));
-        if (!gpus.isEmpty()) {
-            for (int i = 0; i < gpus.size(); i++) {
-                GraphicsCard g = gpus.get(i);
-                t.addRow("GPU " + (i + 1) + " Name", Formatter.nullToDefault(g.getName(), "Unknown"));
-                t.addRow("GPU " + (i + 1) + " VRAM", Formatter.formatBytes(g.getVRam()));
-            }
-        }
-
-        // Logical Volume Groups
-        t.addRow("LOGICAL VOLUME GROUPS", "");
-        List<LogicalVolumeGroup> lvgs = getLogicalVolumeGroups();
-        t.addRow("Logical Volume Groups count", String.valueOf(lvgs.size()));
-        if (!lvgs.isEmpty()) {
-            for (int i = 0; i < lvgs.size(); i++) {
-                LogicalVolumeGroup lvg = lvgs.get(i);
-                t.addRow("LVG " + (i + 1) + " Name",
-                        Formatter.nullToDefault(lvg.getName(), "Unknown"));
-            }
-        }
-
-        t.print();
-        System.out.println();
-    }
-
-    // Test
     public static void main(String[] args) {
         SystemAndEntryPoints sys = new SystemAndEntryPoints();
-        sys.printSystemInfo();
-        System.out.println();
-        sys.printTable();
+        System.out.println(sys.getSystemInfo());
+        
     }
 }
