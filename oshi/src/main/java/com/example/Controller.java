@@ -2,52 +2,53 @@ package com.example;
  
 
 
-import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
-import javafx.stage.Stage;
 
-public class Controller {
-    @FXML
-    private Scene scene;    
-    private Stage stage;
-    private Parent root;
+public class Controller implements Initializable {
     @FXML
     private TextArea outputArea;
-
-    public void switchToScene1(ActionEvent event) throws IOException {
-       Parent root = FXMLLoader.load(getClass().getResource("/com/example/sceneBuilder.fxml"));
-       stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-       scene = new Scene(root);
-         stage.setScene(scene);
-            stage.show();
-        // Load Scene1 FXML and set it to the stage
-    }
-      public void switchToScene2(ActionEvent event) throws IOException {
-                      FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/scene2.fxml"));
-        Parent root = loader.load();
-
-        // ✅ Run CPU info right after scene loads
-        Controller scene2Controller = loader.getController();
-        scene2Controller.showCPUInfo(event);
-
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
     @FXML
-    private void showCPUInfo(ActionEvent event) {
-        CPUInfo cpuInfo = new CPUInfo();          // Create your CPUInfo object
-        String result = cpuInfo.getCPUDetails();  // Get the full text output
-        outputArea.setText(result);   
+    private ChoiceBox<String> myChoiceBox;
+    private final String[] options = {"CPU Info", "Sensors Info", "Graphics Info", "USB Info"};
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        myChoiceBox.getItems().addAll(options);
+        myChoiceBox.setValue("CPU Info");
+        myChoiceBox.setOnAction(this::onShowInfoSelected);
+    }
+    @FXML
+    private void onShowInfoSelected(ActionEvent event) {
+        String selected = myChoiceBox.getValue();
+
+        switch (selected) {
+            case "CPU Info" -> {
+                CPUInfo cpuInfo = new CPUInfo();
+                outputArea.setText(cpuInfo.getCPUDetails());
+            }
+            case "Sensors Info" -> {
+                SensorsInfo sensorsInfo = new SensorsInfo();
+                outputArea.setText(sensorsInfo.getSensorDetails());
+            }
+            case "Graphics Info" -> {
+                GraphicsInfo graphicsInfo = new GraphicsInfo();
+                outputArea.setText(graphicsInfo.getGraphicsDetails());
+            }
+            case "USB Info" -> {
+                UsbInfo usbInfo = new UsbInfo();
+                outputArea.setText(usbInfo.getUsbDetails());
+            }
+            // Add more cases for the rest of your 13 info classes
+            default -> outputArea.setText("No information available for: " + selected);
+        }
     }
 
 

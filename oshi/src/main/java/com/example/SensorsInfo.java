@@ -1,8 +1,9 @@
 package com.example;
 
+import java.util.Arrays;
+
 import oshi.SystemInfo;
 import oshi.hardware.Sensors;
-import java.util.Arrays;
 
 public class SensorsInfo {
     public String getSensorDetails() {
@@ -41,8 +42,8 @@ public class SensorsInfo {
     }
 
     // Optional main method for direct testing
-    public static void main(String[] args) {
-        SensorsInfo sensorsInfo = new SensorsInfo();
-        System.out.println(sensorsInfo.getSensorDetails());
-    }
+   // public static void main(String[] args) {
+    //    SensorsInfo sensorsInfo = new SensorsInfo();
+     //   System.out.println(sensorsInfo.getSensorDetails());
+    //}
 }
