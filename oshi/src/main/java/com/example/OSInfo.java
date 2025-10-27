@@ -3,7 +3,6 @@ package com.example;
 import java.util.Collections;
 import java.util.List;
 
-
 import com.example.helpers.Formatter;
 
 import oshi.SystemInfo;

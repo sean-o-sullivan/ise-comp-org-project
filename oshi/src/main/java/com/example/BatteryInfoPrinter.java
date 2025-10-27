@@ -62,8 +62,8 @@ public class BatteryInfoPrinter {
     }
 
     //test
-    public static void main(String[] args) {
-        BatteryInfoPrinter bip = new BatteryInfoPrinter();
-        System.out.println(bip.getBatteryInfo());
-    }
+   // public static void main(String[] args) {
+       // BatteryInfoPrinter bip = new BatteryInfoPrinter();
+      //  System.out.println(bip.getBatteryInfo());
+    //}
 }
