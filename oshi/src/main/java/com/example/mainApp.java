@@ -27,9 +27,17 @@ public class mainApp extends Application {
         stage.setFullScreenExitKeyCombination(KeyCombination.valueOf("q"));
         stage.setScene(scene);
         stage.show();
+
+        // Start USB detection thread with JavaFX alert callback
+        Runnable usbDetectRunnable = new DetectUsb();
+        Thread usbDetectThread = new Thread(usbDetectRunnable, "USB-Detect-Thread");
+        usbDetectThread.setDaemon(true); // Allows JVM to exit if only this thread is running
+        usbDetectThread.start();
+
     }
 
     public static void main(String[] args) {
         launch(args);
     }
+
 }
