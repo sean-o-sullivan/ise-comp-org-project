@@ -17,7 +17,7 @@ public class ComputerSystemInfo {
         ComputerSystem cs = si.getHardware().getComputerSystem();
 
         info.append("==============================\n");
-        info.append("Computer System Information\n");
+        info.append("COMPUTER SYSTEM INFORMATION\n");
         info.append("==============================\n\n");
 
         if (cs == null) {
@@ -60,7 +60,7 @@ public class ComputerSystemInfo {
         }
 
         info.append("==============================\n");
-        info.append("Chassis (approximated from system info)\n)");
+        info.append("Chassis (approximated from system info)\n");
         info.append("==============================\n");
         info.append("Manufacturer: ").append(cs.getManufacturer()).append("\n");
         info.append("Model:        ").append(cs.getModel()).append("\n");

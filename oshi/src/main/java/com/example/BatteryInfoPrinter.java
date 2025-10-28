@@ -22,7 +22,7 @@ public class BatteryInfoPrinter {
             info.append("No batteries found.\n");
         } else {
             info.append("======================\n");
-            info.append("Battery Information\n");
+            info.append("BATTERY INFORMATION\n");
             info.append("======================\n\n");
 
         for (PowerSource battery : batteries) {

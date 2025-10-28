@@ -13,6 +13,7 @@ public class UsbInfo {
             SystemInfo si = new SystemInfo();
             List<UsbDevice> usbDevices = si.getHardware().getUsbDevices(true);
 
+            info.append("======================\n");
             info.append("USB DEVICE INFORMATION\n");
             info.append("======================\n");
 

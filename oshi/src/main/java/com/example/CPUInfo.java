@@ -28,7 +28,7 @@ public class CPUInfo{
             CentralProcessor processor = hal.getProcessor();
 
             info.append("======================\n");
-            info.append("CPU Information\n");
+            info.append("CPU INFORMATION\n");
             info.append("======================\n\n");
 
             // Basic static info

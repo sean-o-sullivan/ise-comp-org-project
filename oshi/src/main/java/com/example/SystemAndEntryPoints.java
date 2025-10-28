@@ -148,7 +148,7 @@ public class SystemAndEntryPoints {
     public String getSystemInfo() {
         StringBuilder info = new StringBuilder();
         info.append("==============================\n");
-        info.append("System & Hardware Information\n");
+        info.append("SYSTEM & HARDWARE INFORMATION\n");
         info.append("==============================\n\n");
 
         try {

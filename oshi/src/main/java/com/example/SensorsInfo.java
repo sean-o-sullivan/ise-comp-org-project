@@ -13,6 +13,7 @@ public class SensorsInfo {
             SystemInfo si = new SystemInfo();
             Sensors sensors = si.getHardware().getSensors();
 
+            info.append("======================\n");
             info.append("SENSOR INFORMATION\n");
             info.append("======================\n");
 
