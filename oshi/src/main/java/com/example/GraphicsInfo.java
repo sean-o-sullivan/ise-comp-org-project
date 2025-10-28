@@ -13,7 +13,7 @@ public class GraphicsInfo {
             SystemInfo si = new SystemInfo();
             List<GraphicsCard> gpus = si.getHardware().getGraphicsCards();
 
-            info.append("======================\n");
+            info.append("=========================\n");
             info.append("GRAPHICS CARD INFORMATION\n");
             info.append("=========================\n");
 
