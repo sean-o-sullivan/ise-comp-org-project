@@ -60,7 +60,7 @@ public class ComputerSystemInfo {
         }
 
         info.append("==============================\n");
-        info.append("Chassis (approximated from system info\n)");
+        info.append("Chassis (approximated from system info)\n)");
         info.append("==============================\n");
         info.append("Manufacturer: ").append(cs.getManufacturer()).append("\n");
         info.append("Model:        ").append(cs.getModel()).append("\n");
