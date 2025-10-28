@@ -148,7 +148,7 @@ public class SystemAndEntryPoints {
     public String getSystemInfo() {
         StringBuilder info = new StringBuilder();
         info.append("==============================\n");
-        info.append("System & Hardware Information");
+        info.append("System & Hardware Information\n");
         info.append("==============================\n\n");
 
         try {
@@ -270,7 +270,7 @@ public class SystemAndEntryPoints {
         
         // Logical Volume Groups
         List<LogicalVolumeGroup> lvgs = getLogicalVolumeGroups();
-        info.append("LOGICAL VOLUME GROUPS");
+        info.append("LOGICAL VOLUME GROUPS: ");
         if (lvgs.isEmpty()) {
             info.append("No logical volume groups found.\n\n");
         } else {
