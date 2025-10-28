@@ -22,7 +22,7 @@ public class BatteryInfoPrinter {
             info.append("No batteries found.\n");
         } else {
             info.append("======================\n");
-            info.append("Battery Information\n");
+            info.append("BATTERY INFORMATION\n");
             info.append("======================\n\n");
 
         for (PowerSource battery : batteries) {
@@ -62,8 +62,8 @@ public class BatteryInfoPrinter {
     }
 
     //test
-   // public static void main(String[] args) {
-       // BatteryInfoPrinter bip = new BatteryInfoPrinter();
-      //  System.out.println(bip.getBatteryInfo());
-    //}
+    public static void main(String[] args) {
+        BatteryInfoPrinter bip = new BatteryInfoPrinter();
+       System.out.println(bip.getBatteryInfo());
+    }
 }

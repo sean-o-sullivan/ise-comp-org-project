@@ -221,8 +221,9 @@ public class OSInfo {
     public String buildOsInfo() {
         StringBuilder info = new StringBuilder();
 
-        info.append("Operating System\n");
-        info.append("----------------\n");
+        info.append("==============================\n");
+        info.append("OPERATING SYSTEM\n");
+        info.append("==============================\n\n");
 
         try{
             info.append("Family: ").append(getFamily()).append(".\n");

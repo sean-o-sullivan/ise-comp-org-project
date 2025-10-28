@@ -15,6 +15,7 @@ public class MemoryInfo {
             SystemInfo si = new SystemInfo();
             GlobalMemory memory = si.getHardware().getMemory();
 
+            info.append("======================\n");
             info.append("MEMORY INFORMATION\n");
             info.append("======================\n");
 

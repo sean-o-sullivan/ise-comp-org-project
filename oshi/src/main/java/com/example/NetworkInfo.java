@@ -14,7 +14,7 @@ public class NetworkInfo {
             List<NetworkIF> networkIFs = si.getHardware().getNetworkIFs();
 
             info.append("==============================\n");
-            info.append("Network Interfaces\n");
+            info.append("NETWORK INTERFACES\n");
             info.append("==============================\n\n");
 
             if (networkIFs == null || networkIFs.isEmpty()) {
