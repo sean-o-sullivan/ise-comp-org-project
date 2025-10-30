@@ -1,9 +1,10 @@
-#instruction{
+#instruction {
     -fx-font-size: 20;
     -fx-font-family: "Lucida Console";
     -fx-text-fill: "White";
-    -fx-alignment:center;
+    -fx-alignment: center;
 }
-.root{
-    -fx-background-color:"Black";
+
+.root {
+    -fx-background-color: "White";
 }
